@@ -2,6 +2,7 @@ services:
   # 后端API服务
   - type: web
     name: hotel-api-devbox
+    env: java
     plan: free
     region: singapore # 选择离你最近的区域，可以是 singapore, frankfurt, oregon 等
     buildCommand: ./mvnw package -DskipTests
@@ -24,7 +25,7 @@ services:
           name: hotel-db
           property: password
       - key: ALLOWED_ORIGINS
-        value: "https://yiqi-hotel-frontend.vercel.app" # 前端域名，部署后更新
+        value: "https://yiqi-hotel.vercel.app" # 更新为你的实际前端域名
 
 # 数据库服务
 databases:
