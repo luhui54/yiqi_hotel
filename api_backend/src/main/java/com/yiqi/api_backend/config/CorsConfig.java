@@ -6,56 +6,42 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
 
 /**
- * 跨域配置
+ * 全局跨域配置 (最终修正版 for Sa-Token)
+ * 这个配置是独立于安全框架的，必须被正确设置。
  */
 @Configuration
-public class CorsConfig implements WebMvcConfigurer {
+public class CorsConfig {
 
-    @Value("${spring.web.cors.allowed-origins:*}")
+    // 读取您在 Render 上设置的正确环境变量名 ALLOWED_ORIGINS
+    @Value("${ALLOWED_ORIGINS}")
     private String allowedOrigins;
 
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        
-        // 允许指定来源的跨域请求
-        if (allowedOrigins.contains(",")) {
-            String[] origins = allowedOrigins.split(",");
-            for (String origin : origins) {
+
+        // 允许发送凭证
+        config.setAllowCredentials(true);
+
+        // 设置允许的来源域名 (从环境变量读取)
+        if (allowedOrigins != null && !allowedOrigins.trim().isEmpty()) {
+            for (String origin : allowedOrigins.split(",")) {
                 config.addAllowedOrigin(origin.trim());
             }
-        } else {
-            // 特别处理通配符情况
-            if ("*".equals(allowedOrigins)) {
-                // 当使用通配符时，不能设置allowCredentials为true
-                config.addAllowedOriginPattern("*");  // 使用模式匹配代替通配符
-                config.setAllowCredentials(false);    // 通配符模式下不允许凭证
-            } else {
-                config.addAllowedOrigin(allowedOrigins);
-                config.setAllowCredentials(true);     // 指定域名时允许凭证
-            }
         }
-        
-        // 通用配置
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        config.addExposedHeader("*");
-        
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-        .allowedOrigins("*")
-        .allowedMethods("GET", "POST", "DELETE", "PUT")
-        .maxAge(3600);
+        // 允许所有请求头
+        config.addAllowedHeader("*");
+
+        // 允许所有请求方法 (GET, POST, PUT, DELETE, OPTIONS, etc.)
+        config.addAllowedMethod("*");
+
+        // 将此 CORS 配置应用到所有路径
+        source.registerCorsConfiguration("/**", config);
+
+        return new CorsFilter(source);
     }
 }
