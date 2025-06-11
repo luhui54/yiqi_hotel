@@ -1,0 +1,51 @@
+package com.markerhub.controller.admin;
+
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.ArrayUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.markerhub.common.base.BaseController;
+import com.markerhub.common.lang.Result;
+import com.markerhub.entity.${entity};
+import com.markerhub.service.${entity}Service;
+import jakarta.annotation.Resource;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@RestController
+@RequestMapping("/admin/${table.entityPath}")
+public class ${table.controllerName} extends BaseController {
+
+	@Resource
+    ${entity}Service ${table.entityPath}Service;
+
+	@GetMapping("/page")
+	public Result page(${entity} ${table.entityPath}) {
+		Page<${entity}> pageData = ${table.entityPath}Service.page(getPage(), queryLike(${table.entityPath}));
+		return Result.success(pageData);
+	}
+
+	@GetMapping("/info/{id}")
+	public Result info(@PathVariable long id) {
+        ${entity} ${table.entityPath} =${table.entityPath}Service.getById(id);
+		return Result.success(${table.entityPath});
+	}
+
+	@PostMapping("/save")
+	public Result save(@Validated @RequestBody ${entity} ${table.entityPath}) {
+		if (${table.entityPath}.getId() == null) {
+            ${table.entityPath}.setCreateTime(LocalDateTime.now());
+		}
+		${table.entityPath}Service.saveOrUpdate(${table.entityPath});
+		return Result.success();
+	}
+
+	@PostMapping("/delete")
+	public Result delete(@RequestBody Long[] ids) {
+		Assert.isTrue(ArrayUtil.isNotEmpty(ids), "请选择删除选项");
+		${table.entityPath}Service.removeBatchByIds(List.of(ids));
+		return Result.success();
+	}
+}

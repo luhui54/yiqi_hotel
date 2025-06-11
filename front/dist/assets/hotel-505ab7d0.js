@@ -1,0 +1,1 @@
+import{s as e}from"./user-194456a1.js";function a(){return e({url:"/app/hotel/dict",method:"get"})}function o(t){return e({url:"/app/hotel/search",method:"get",params:t})}function i(t){return e({url:"/app/hotel/detail",method:"get",params:{id:t}})}export{i as D,a as G,o as S};

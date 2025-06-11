@@ -1,0 +1,1 @@
+import{s as t}from"./user-194456a1.js";function s(){return t({url:"/app/userInfo",method:"get"})}function o(e){return t({url:"/app/userInfo/update",method:"post",data:e})}function a(e){return t({url:"/app/updatePass",method:"post",data:e})}export{s as G,o as U,a};

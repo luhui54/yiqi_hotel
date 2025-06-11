@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: hotel-api-devbox
+    env: java
+    plan: free
+    buildCommand: ./mvnw package -DskipTests
+    startCommand: java -jar target/*.jar
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: DATABASE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: hotel-db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: hotel-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: hotel-db
+          property: password
+
+databases:
+  - name: hotel-db
+    plan: free
+    ipAllowList: [] # allow all

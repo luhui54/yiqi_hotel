@@ -1,0 +1,1 @@
+import{J as o}from"./index-98ff7959.js";function r(e){return o({url:"/admin/room/page",method:"get",params:e})}function n(e){return o({url:"/admin/room/info/"+e,method:"get"})}function a(e){return o({url:"/admin/room/save",method:"post",data:e})}function m(e){return o({url:"/admin/room/delete",method:"post",data:e})}export{m as D,r as G,n as I,a as S};
