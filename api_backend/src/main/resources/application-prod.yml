@@ -1,0 +1,36 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 数据库连接信息将由环境变量提供
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+server:
+  port: ${PORT:8080}
+  servlet:
+    context-path: /api
+
+# 跨域配置
+spring.web.cors:
+  allowed-origins: ${ALLOWED_ORIGINS:*}
+  allowed-methods: GET,POST,PUT,DELETE
+  allowed-headers: "*"
+
+# Sa-Token配置
+sa-token:
+  jwt-secret-key: ${JWT_SECRET_KEY:ke3983434io3u493jk43489394jndi}
+  token-name: userToken
+  # token有效期，单位秒，默认30天
+  timeout: 2592000
+  # token临时有效期，单位秒，默认1天
+  activity-timeout: 86400
+  # 是否允许同一账号多地同时登录
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个token
+  is-share: false
+  # token风格
+  token-style: uuid
+  # 是否输出操作日志
+  is-log: false
