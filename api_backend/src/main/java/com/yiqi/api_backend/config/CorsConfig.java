@@ -31,16 +31,20 @@ public class CorsConfig implements WebMvcConfigurer {
                 config.addAllowedOrigin(origin.trim());
             }
         } else {
-            config.addAllowedOrigin(allowedOrigins);
+            // 特别处理通配符情况
+            if ("*".equals(allowedOrigins)) {
+                // 当使用通配符时，不能设置allowCredentials为true
+                config.addAllowedOriginPattern("*");  // 使用模式匹配代替通配符
+                config.setAllowCredentials(false);    // 通配符模式下不允许凭证
+            } else {
+                config.addAllowedOrigin(allowedOrigins);
+                config.setAllowCredentials(true);     // 指定域名时允许凭证
+            }
         }
         
-        // 允许携带认证信息
-        config.setAllowCredentials(true);
-        // 允许所有请求头
+        // 通用配置
         config.addAllowedHeader("*");
-        // 允许所有方法
         config.addAllowedMethod("*");
-        // 暴露响应头
         config.addExposedHeader("*");
         
         source.registerCorsConfiguration("/**", config);
