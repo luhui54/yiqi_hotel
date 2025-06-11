@@ -1,14 +1,16 @@
 services:
+  # 后端API服务
   - type: web
     name: hotel-api-devbox
     plan: free
+    region: singapore # 选择离你最近的区域，可以是 singapore, frankfurt, oregon 等
     buildCommand: ./mvnw package -DskipTests
-    startCommand: java -jar target/*.jar
+    startCommand: java -Dserver.port=$PORT -jar target/*.jar
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
-      - key: DATABASE_URL
-        sync: false
+      - key: JAVA_OPTS
+        value: "-Xmx512m -Xms256m"
       - key: SPRING_DATASOURCE_URL
         fromDatabase:
           name: hotel-db
@@ -21,8 +23,12 @@ services:
         fromDatabase:
           name: hotel-db
           property: password
+      - key: ALLOWED_ORIGINS
+        value: "https://yiqi-hotel-frontend.vercel.app" # 前端域名，部署后更新
 
+# 数据库服务
 databases:
   - name: hotel-db
     plan: free
-    ipAllowList: [] # allow all
+    region: singapore # 选择与Web服务相同的区域
+    ipAllowList: [] # 允许所有IP访问
