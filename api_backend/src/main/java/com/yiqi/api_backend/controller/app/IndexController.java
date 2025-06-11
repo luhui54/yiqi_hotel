@@ -8,6 +8,7 @@ import com.yiqi.api_backend.common.lang.Result;
 import com.yiqi.api_backend.entity.Hotel;
 import com.yiqi.api_backend.service.HotelService;
 import jakarta.annotation.Resource;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,7 +30,7 @@ public class IndexController {
     private HotelService hotelService;
 
 
-    @RequestMapping("/index")
+    @GetMapping("/index")
     public Result index(){
         List<Hotel> hotelList = hotelService.list(new QueryWrapper<Hotel>().orderByDesc("score").last("limit 0, 4"));
 
