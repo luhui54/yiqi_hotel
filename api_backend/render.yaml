@@ -1,0 +1,33 @@
+services:
+  # 后端API服务
+  - type: web
+    name: yiqi-hotel-api
+    env: java
+    plan: free
+    buildCommand: ./mvnw package -DskipTests
+    startCommand: java -jar target/*.jar
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+        value: org.postgresql.Driver
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: yiqi-hotel-db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: yiqi-hotel-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: yiqi-hotel-db
+          property: password
+      - key: ALLOWED_ORIGINS
+        value: "https://yiqi-hotel-frontend.vercel.app" # 前端域名，部署后更新
+
+# 数据库服务
+databases:
+  - name: yiqi-hotel-db
+    plan: free
+    ipAllowList: [] # 允许所有IP访问
